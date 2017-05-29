@@ -3,6 +3,8 @@
     var bodyParser = require('body-parser');
     var multer = require('multer');
 
+    var endFilename;
+
     app.use(function(req, res, next) { //allow cross origin requests
         res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
         res.header("Access-Control-Allow-Origin", "http://localhost:4200");
@@ -22,7 +24,9 @@
         },
         filename: function (req, file, cb) {
             var datetimestamp = Date.now();
-            cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length -1]);
+            endFilename = file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length -1];
+            console.log('endFilename: ' + endFilename);
+            cb(null, endFilename);
         }
     });
 
@@ -38,7 +42,7 @@
                  res.json({error_code:1,err_desc:err});
                  return;
             }
-             res.json({error_code:0,err_desc:null});
+             res.json({error_code:0,err_desc:null, filename:endFilename});
         });
     });
 
